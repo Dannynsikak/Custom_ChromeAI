@@ -41,7 +41,7 @@ function SummarizerComponent() {
             setIsAvailable(true);
           } else {
             console.warn(
-              "Summarizer is not available on this device or browser."
+              "Summarizer is not available on this device or browser If you are in Chrome, join the Early Preview Program: https://developer.chrome.com/docs/ai/built-in#get_an_early_preview"
             );
           }
         }
