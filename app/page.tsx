@@ -4,7 +4,7 @@ import SummarizerComponent from "@/components/Summarizer";
 import LanguageDetector from "@/components/LanguageDetection";
 export default function Home() {
   return (
-    <div className="w-[60%] m-auto ">
+    <div>
       {/* <AIComponent /> */}
       <TranslationComponent />
       <SummarizerComponent />
