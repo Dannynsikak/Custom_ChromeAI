@@ -58,6 +58,16 @@ function TranslationComponent() {
   return (
     <div className="p-5">
       <h2 className="text-2xl font-bold mb-4 text-center">Text Translator</h2>
+      <div className="m-3">
+        {translatedText && (
+          <div className="mt-5 p-3 border border-gray-300 rounded">
+            <h3 className="text-xl font-semibold">Translated Text:</h3>
+            <p>{translatedText}</p>
+          </div>
+        )}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+      </div>
+
       <textarea
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
@@ -92,13 +102,6 @@ function TranslationComponent() {
       >
         {loading ? "Translating..." : "Translate"}
       </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {translatedText && (
-        <div className="mt-5 p-3 border border-gray-300 rounded">
-          <h3 className="text-xl font-semibold">Translated Text:</h3>
-          <p>{translatedText}</p>
-        </div>
-      )}
     </div>
   );
 }

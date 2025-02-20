@@ -91,12 +91,12 @@ const LanguageDetection = () => {
         to enable it.
       </div>
       <form onSubmit={handleSubmit} style={{ visibility: "hidden" }}>
+        <output>{outputText}</output>
+        <span>{detectedLanguage}</span>
         <textarea
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
         />
-        <output>{outputText}</output>
-        <span>{detectedLanguage}</span>
         <select
           value={targetLanguage}
           onChange={(e) => setTargetLanguage(e.target.value)}

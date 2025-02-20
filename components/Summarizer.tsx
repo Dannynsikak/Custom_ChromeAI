@@ -102,6 +102,14 @@ function SummarizerComponent() {
             </p>
           ) : (
             <>
+              <div className="m-3">
+                {summary && (
+                  <div className="mt-5 p-2 border border-gray-300 rounded">
+                    <h3 className="text-xl font-semibold">Summary:</h3>
+                    <p>{summary}</p>
+                  </div>
+                )}
+              </div>
               <textarea
                 value={inputText}
                 onChange={handleInputChange}
@@ -123,17 +131,13 @@ function SummarizerComponent() {
               >
                 {loading ? "Summarizing..." : "Summarize Text"}
               </button>
-              {summary && (
-                <div className="mt-5 p-2 border border-gray-300 rounded">
-                  <h3 className="text-xl font-semibold">Summary:</h3>
-                  <p>{summary}</p>
-                </div>
-              )}
             </>
           )}
         </>
       ) : (
-        <p>Summarizer is not available on this device or browser.</p>
+        <p className="m-3">
+          Summarizer is not available on this device or browser.
+        </p>
       )}
     </div>
   );
