@@ -82,7 +82,7 @@ const LanguageDetection = () => {
     <div>
       <div className="not-supported-message text-center" hidden>
         Your browser doesn't support the Language Detector APIs. If you're in
-        Chrome, join the
+        Chrome, join the &nbsp;
         <span className="underline">
           <a href="https://developer.chrome.com/docs/ai/built-in#get_an_early_preview">
             Early Preview Program
