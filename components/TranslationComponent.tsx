@@ -15,7 +15,7 @@ function TranslationComponent() {
 
     const translationOptions = {
       sourceLanguage: "en", // assuming the input is in English
-      targetLanguage: targetLanguage, // dynamically chosen target language
+      targetLanguage: targetLanguage,
     };
 
     try {
