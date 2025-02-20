@@ -1,6 +1,21 @@
 "use client";
 import React, { useState } from "react";
 
+declare global {
+  interface Window {
+    translation: {
+      canTranslate: (options: {
+        sourceLanguage: string;
+        targetLanguage: string;
+      }) => Promise<string>;
+      createTranslator: (options: {
+        sourceLanguage: string;
+        targetLanguage: string;
+      }) => Promise<{ translate: (text: string) => Promise<string> }>;
+    };
+  }
+}
+
 function TranslationComponent() {
   const [inputText, setInputText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
@@ -14,7 +29,7 @@ function TranslationComponent() {
     setTranslatedText("");
 
     const translationOptions = {
-      sourceLanguage: "en", // assuming the input is in English
+      sourceLanguage: "en",
       targetLanguage: targetLanguage,
     };
 
@@ -52,7 +67,11 @@ function TranslationComponent() {
         className="mb-2 p-2 border border-gray-300 rounded w-full"
       />
       <br />
+      <label htmlFor="language-select" className="block mb-2">
+        Select Target Language:
+      </label>
       <select
+        id="language-select"
         value={targetLanguage}
         onChange={(e) => setTargetLanguage(e.target.value)}
         className="mb-2 p-2 border border-gray-300 rounded w-full"
