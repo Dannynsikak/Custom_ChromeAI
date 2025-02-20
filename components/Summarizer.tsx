@@ -5,7 +5,7 @@ function SummarizerComponent() {
   const [inputText, setInputText] = useState("");
   const [summary, setSummary] = useState("");
   const [isAvailable, setIsAvailable] = useState(false);
-  const [summarizer, setSummarizer] = useState(null);
+  const [summarizer, setSummarizer] = useState<Summarizer | null>(null);
   const [loading, setLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState({
@@ -14,41 +14,70 @@ function SummarizerComponent() {
   });
 
   // Initialize the summarizer if available
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const initializeSummarizer = async () => {
-      if (typeof ai !== "undefined" && ai.summarizer) {
-        const canSummarize = await ai.summarizer.capabilities();
-        if (canSummarize && canSummarize.available !== "no") {
-          if (canSummarize.available === "readily") {
-            const newSummarizer = await ai.summarizer.create();
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      if (typeof window !== "undefined" && (window as any).ai) {
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        const ai = (window as any).ai; // Safely access the global object
+        if (ai.summarizer) {
+          const canSummarize = await ai.summarizer.capabilities();
+          if (canSummarize && canSummarize.available !== "no") {
+            // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
+            let newSummarizer;
+            if (canSummarize.available === "readily") {
+              newSummarizer = await ai.summarizer.create();
+            } else {
+              newSummarizer = await ai.summarizer.create();
+              newSummarizer.addEventListener("downloadprogress", (e: any) => {
+                setDownloadProgress({ loaded: e.loaded, total: e.total });
+                setIsDownloading(true);
+              });
+              await newSummarizer.ready;
+              setIsDownloading(false);
+            }
             setSummarizer(newSummarizer);
+            setIsAvailable(true);
           } else {
-            const newSummarizer = await ai.summarizer.create();
-            newSummarizer.addEventListener("downloadprogress", (e) => {
-              setDownloadProgress({ loaded: e.loaded, total: e.total });
-              setIsDownloading(true);
-            });
-            await newSummarizer.ready;
-            setSummarizer(newSummarizer);
-            setIsDownloading(false);
+            console.warn(
+              "Summarizer is not available on this device or browser."
+            );
           }
-          setIsAvailable(true);
-        } else {
-          console.warn(
-            "Summarizer is not available on this device or browser."
-          );
         }
       }
     };
+
     initializeSummarizer();
 
-    // Cleanup the summarizer on component unmount
     return () => {
       if (summarizer) summarizer.destroy();
     };
   }, []);
 
-  const handleInputChange = (e) => {
+  interface DownloadProgress {
+    loaded: number;
+    total: number;
+  }
+
+  interface Summarizer {
+    destroy: () => void;
+    summarize: (text: string) => Promise<string>;
+    addEventListener: (
+      event: string,
+      callback: (e: ProgressEvent) => void
+    ) => void;
+    ready: Promise<void>;
+  }
+
+  interface Ai {
+    summarizer: {
+      capabilities: () => Promise<{ available: string }>;
+      create: () => Promise<Summarizer>;
+    };
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
   };
 
